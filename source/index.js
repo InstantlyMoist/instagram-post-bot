@@ -6,34 +6,40 @@ const schedule = require('node-schedule');
 const readFileAsync = promisify(readFile);
 const random = require('random');
 const meme = require('./post/meme.js');
+const request = require('request');
+const fs = require('fs');
 
 const credentials = require('./credentials.json');
 
 async function uploadPost() {
-  //TODO: Get and load meme
-  meme.getMemeJSON().then((meme) => {
-
-  });
-
-
-  console.log("Uploading new post...");
-  const ig = new IgApiClient();
-  ig.state.generateDevice(credentials.instagram.username);
-  await ig.qe.syncLoginExperiments();
-  const loggedInUser = await ig.account.login(credentials.instagram.username, credentials.instagram.password);
-  const path = './assets/smiley.jpg';
-  const publishResult = await ig.publish.photo({
-    file: await readFileAsync(path),
-    caption: '<3',
+  let newMeme = await meme.getMemeJSON();
+  downloadImageFromUrl(newMeme.url, (success) => {
+    if (!success) {
+      uploadPost();
+      return;
+    };
+    /*const ig = new IgApiClient();
+    ig.state.generateDevice(credentials.instagram.username);
+    await ig.qe.syncLoginExperiments();
+    const loggedInUser = await ig.account.login(credentials.instagram.username, credentials.instagram.password);
+    const path = './assets/smiley.jpg';
+    const publishResult = await ig.publish.photo({
+      file: await readFileAsync(path),
+      caption: '<3',
+    });*/
   });
 };
 
-async function getMeme() {
-  let newMeme = await meme.getMemeJSON();
+uploadPost();
+
+async function downloadImageFromUrl(url, callback) {
+  request.head(url, (err, body) => {
+    if (err) return callback(false);
+    request(url).pipe(fs.createWriteStream("./memes/meme.jpg")).on('close', () => {
+      return callback(true)
+    });
+  })
 }
-
-getMeme();
-
 
 schedule.scheduleJob('* 0 * * *', () => {
   let delay = (random.int(0, 10) * 1000);

@@ -24,7 +24,6 @@ async function getMemeJSON() {
 }
 
 async function savePost(postIdentifier) {
-    console.log('saving post');
     let json = posted;
     json.posts.push(postIdentifier);
     fs.writeFile("source/posted/uploaded.json", JSON.stringify(json), (err) => {
@@ -39,6 +38,7 @@ async function beenPosted(postIdentifier) {
     posted.posts.forEach(element => {
         if (element === postIdentifier) {
             returnable = true;
+            console.log('DUPLICATE FOUND NIBBA');
             return;
         }
     });
