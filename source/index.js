@@ -21,3 +21,5 @@ async function uploadPost() {
 };
 
 uploadPost();
+
+schedule.scheduleJob()
