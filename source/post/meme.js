@@ -5,7 +5,6 @@ const fs = require('fs');
 module.exports = {
     getMemeJSON: getMemeJSON
 }
-
 async function getMemeJSON() {
     let response = await fetch('http://meme-api.herokuapp.com/gimme/dankmemes');
     let data = await response.json();
