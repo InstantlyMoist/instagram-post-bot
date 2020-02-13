@@ -19,7 +19,7 @@ async function uploadPost() {
       return;
     };
     console.log(newMeme.title);
-    /*const ig = new IgApiClient();
+    const ig = new IgApiClient();
     ig.state.generateDevice(credentials.instagram.username);
     await ig.qe.syncLoginExperiments();
     const loggedInUser = await ig.account.login(credentials.instagram.username, credentials.instagram.password);
@@ -27,7 +27,7 @@ async function uploadPost() {
     const publishResult = await ig.publish.photo({
       file: await readFileAsync(path),
       caption: '<3',
-    });*/
+    });
   });
 };
 
