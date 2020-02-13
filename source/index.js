@@ -18,6 +18,7 @@ async function uploadPost() {
       uploadPost();
       return;
     };
+    console.log(newMeme.title);
     /*const ig = new IgApiClient();
     ig.state.generateDevice(credentials.instagram.username);
     await ig.qe.syncLoginExperiments();
