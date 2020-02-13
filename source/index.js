@@ -29,8 +29,7 @@ async function uploadPost() {
 };
 
 async function getMeme() {
-  let foundMeme = await meme.getMemeJSON();
-  console.log(foundMeme);
+  let newMeme = await meme.getMemeJSON();
 }
 
 getMeme();
