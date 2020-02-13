@@ -38,9 +38,9 @@ async function uploadPost() {
 uploadPost();
 
 async function downloadImageFromUrl(url, callback) {
-  console.log("downloading");
+  console.log("Downloading meme");
   let extension = url.endsWith("png") ? "png" : "jpg";
-  console.log("END " + extension);
+  // console.log("END " + extension);
   request.head(url, (err, body) => {
     if (err) return callback(false);
     request(url).pipe(fs.createWriteStream(`./memes/meme.${extension}`)).on('close', () => {
@@ -55,7 +55,7 @@ async function downloadImageFromUrl(url, callback) {
 
 async function convertMeme() {
   Jimp.read("./memes/meme.png", function(err, image) {
-    console.log("converting");
+    console.log("Converting meme");
     image.scaleToFit(512, 512).write("./memes/meme.jpg");
     console.log("done 1");
   });
