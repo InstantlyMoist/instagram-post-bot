@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const tags = "#dankmemes #memes #funny #laughing #fortnite #minecraft #roblox #tiktok";
+const tags = "<3";
 
 module.exports = {
     getCaption: getCaption
@@ -10,8 +10,8 @@ async function getCaption() {
     let data = await response.json();
     const caption = data.phrase;
     return `
-        "${caption}"⁣
-        ⁣---------- 
+        "${caption}"⁣\n
+        ⁣----------\n
         ⁣${tags}
     `;
 }

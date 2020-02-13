@@ -11,6 +11,7 @@ async function getMemeJSON() {
     let toReturn;
 
     await beenPosted(data.postLink).then((posted) => {
+        console.log("posted " + posted);
         if (posted) toReturn = getMemeJSON();
         else {
             toReturn = data;
@@ -26,13 +27,13 @@ async function savePost(postIdentifier) {
     let json = posted;
     json.posts.push(postIdentifier);
     fs.writeFile("source/posted/uploaded.json", JSON.stringify(json), (err) => {
+        console.log('updating json file');
         if (err) throw err;
     });
 }
 
 async function beenPosted(postIdentifier) {
     let returnable = false;
-
     if (posted.posts.length == 0) return returnable;
     posted.posts.forEach(element => {
         if (element === postIdentifier) {
@@ -41,5 +42,6 @@ async function beenPosted(postIdentifier) {
             return;
         }
     });
+    console.log("OK");
     return returnable;
 }
