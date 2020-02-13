@@ -1,13 +1,21 @@
 const { IgApiClient } = require('instagram-private-api');
-const { readFile } = require('fs'); 
+const { readFile } = require('fs');
 const { promisify } = require('util');
 const { sample } = require('lodash');
 const schedule = require('node-schedule');
 const readFileAsync = promisify(readFile);
+const random = require('random');
+const meme = require('./post/meme.js');
 
-const credentials = require('./credentials.json')
+const credentials = require('./credentials.json');
 
 async function uploadPost() {
+  //TODO: Get and load meme
+  meme.getMemeJSON().then((meme) => {
+
+  });
+
+
   console.log("Uploading new post...");
   const ig = new IgApiClient();
   ig.state.generateDevice(credentials.instagram.username);
@@ -20,6 +28,17 @@ async function uploadPost() {
   });
 };
 
-uploadPost();
+async function getMeme() {
+  let foundMeme = await meme.getMemeJSON();
+  console.log(foundMeme);
+}
 
-schedule.scheduleJob()
+getMeme();
+
+
+schedule.scheduleJob('* 0 * * *', () => {
+  let delay = (random.int(0, 10) * 1000);
+  console.log('De post wordt geplaatst om: ' + delay);
+  setTimeout(delay, uploadPost());
+});
+
