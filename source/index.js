@@ -15,8 +15,6 @@ const inquirer = require('inquirer');
 const credentials = require('./credentials.json');
 const { createCanvas, loadImage } = require('canvas')
 
-uploadPost();
-
 async function uploadPost() {
   console.log('Uploading new post...');
   
@@ -106,7 +104,7 @@ function drawImageScaled(img, ctx) {
     centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
 }
 
-schedule.scheduleJob('*/5 * * * *', () => {
+schedule.scheduleJob('*/30 * * * *', () => {
   let delay = (random.int(0, 2) * 1000);
   setTimeout(uploadPost, delay);
 });
