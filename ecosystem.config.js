@@ -11,19 +11,19 @@ module.exports = {
       NODE_ENV: 'development'
     },
     env_production: {
-      NODE_ENV: 'productionn'
+      NODE_ENV: 'production'
     }
   }],
 
   deploy : {
-    productionn : {
+    production : {
       user : 'kyllian',
       host : '172.19.3.20',
       key  : '/home/kyllian/.ssh/id_rsa',
       ref  : 'origin/master',
       repo : 'git@github.com:InstantlyMoist/instagram-post-bot.git',
       path : '/home/kyllian/instagram-post-bot',
-      'post-deploy' : 'pm2 kill && git pull && npm install && pm2 start /home/kyllian/instagram-post-bot/ecosystem.config.js'
+      'post-deploy' : 'pm2 stop instagram-post-bot && git pull && npm install && pm2 start /home/kyllian/instagram-post-bot/ecosystem.config.js'
     }
   }
 };
