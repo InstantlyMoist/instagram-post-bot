@@ -6,14 +6,14 @@ module.exports = {
 }
 
 async function getCaption() {
-    let response = await fetch('https://corporatebs-generator.sameerkumar.website/');
+    let response = await fetch('https://api.quotable.io/random/');
     let data = await response.json();
-    const caption = data.phrase;
+    const caption = data.content;
     return `
+    ⠀
     "${caption}"⁣⠀
     ⠀
     ⁣----------⠀
-⠀
     ⁣${tags}
     `;
 }
