@@ -15,37 +15,53 @@ const inquirer = require('inquirer');
 const credentials = require('./credentials.json');
 const { createCanvas, loadImage } = require('canvas')
 
+const ig = new IgApiClient();
+login();
+
+let loggedIn = false;
+
+async function login() {
+  console.log("Logging in...");
+  ig.state.generateDevice(credentials.instagram.username);
+  await ig.qe.syncLoginExperiments();
+  Bluebird.try(async () => {
+    const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password).then(() => {
+      console.log('Logged in!');
+      loggedIn = true;
+    });
+  }).catch(IgCheckpointError, async () => {
+    await ig.challenge.auto(true);
+    const { code } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'code',
+        message: 'Enter code',
+      },
+    ]);
+    console.log(await ig.challenge.sendSecurityCode(code));
+  }).catch(e => console.log('Could not resolve checkpoint:', e, e.stack));
+}
+
+
+
 async function uploadPost() {
+  if (!loggedIn) {
+    console.log("Not logged in, prohobitting upload");
+    return;
+  }
   console.log('Uploading new post...');
-  
   let newMeme = await meme.getMemeJSON();
   downloadImageFromUrl(newMeme.url, async (success) => {
     if (!success) {
       uploadPost();
       return;
     };
-    const ig = new IgApiClient();
-    ig.state.generateDevice(credentials.instagram.username);
-    await ig.qe.syncLoginExperiments();
-    Bluebird.try(async () => {
-      const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password);
-      const path = "./memes/meme.jpg";
-      const publishResult = await ig.publish.photo({
-        file: await readFileAsync(path),
-        caption: await caption.getCaption(),
-      });
-    }).catch(IgCheckpointError, async () => {
-      await ig.challenge.auto(true);
-      const { code } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'code',
-          message: 'Enter code',
-        },
-      ]);
-      console.log(await ig.challenge.sendSecurityCode(code));
-    }).catch(e => console.log('Could not resolve checkpoint:', e, e.stack)).then(console.log('upload finished'));
-
+    const path = "./memes/meme.jpg";
+    const publishResult = await ig.publish.photo({
+      file: await readFileAsync(path),
+      caption: await caption.getCaption(),
+    });
+    console.log("Upload status: " + publishResult.status);
   });
 };
 
@@ -104,7 +120,7 @@ function drawImageScaled(img, ctx) {
     centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
 }
 
-schedule.scheduleJob('*/30 * * * *', () => {
+schedule.scheduleJob('0 * * * *', () => {
   let delay = (random.int(0, 2) * 1000);
   setTimeout(uploadPost, delay);
 });
