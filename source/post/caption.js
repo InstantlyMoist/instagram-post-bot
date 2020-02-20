@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const tags = "#dankmemes #memes #funny #laughing #fortnite #minecraft #roblox #tiktok #followme #likeforlike #like4like #follow4follow #followforfollow #f4f";
+const tags = "#dankmemes #memes #funny #laughing #fortnite #minecraft #roblox #tiktok #nature #likeforlikes #tbt #photooftheday #meme #dank";
 
 module.exports = {
     getCaption: getCaption
