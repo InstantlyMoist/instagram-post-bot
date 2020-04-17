@@ -28,7 +28,6 @@ async function login() {
     const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password).then(() => {
       console.log('Logged in!');
       loggedIn = true;
-      uploadPost();
     });
   }).catch(IgCheckpointError, async () => {
     await ig.challenge.auto(true);
@@ -68,13 +67,10 @@ async function uploadPost() {
 
 async function downloadImageFromUrl(url, callback) {
   let extension = url.endsWith("png") ? "png" : "jpg";
-  request.head(url, (err, body) => {
-    if (err) return callback(false);
-    request(url).pipe(fs.createWriteStream(`./memes/meme.${extension}`)).on('close', () => {
-      if (extension === "png") convertMeme();
-      resizeImage();
-      return callback(true);
-    })
+  request(url).pipe(fs.createWriteStream(`./memes/meme.${extension}`)).on('close', () => {
+    if (extension === "png") convertMeme();
+    resizeImage();
+    return callback(true);
   })
 }
 
