@@ -26,8 +26,11 @@ async function savePost(postIdentifier) {
     let json = posted;
 
     json.posts.push(id);
-    fs.writeFile("memes/posted/uploaded.json", JSON.stringify(json), (err) => {
-        if (err) throw err;
+    fs.writeFile("./../memes/posted/uploaded.json", JSON.stringify(json), (err) => {
+        if (err) {
+			console.log("FAILED");
+			throw err;
+		}
     });
 }
 
