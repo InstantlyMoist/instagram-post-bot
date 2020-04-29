@@ -28,7 +28,6 @@ async function login() {
     const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password).then(() => {
       console.log('Logged in!');
       loggedIn = true;
-	  uploadPost();
     });
   }).catch(IgCheckpointError, async () => {
     await ig.challenge.auto(true);
