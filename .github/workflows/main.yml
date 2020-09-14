@@ -18,6 +18,6 @@ jobs:
         port: ${{ secrets.PORT }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd /home/${{ secrets.USERNAME }}/ftp/files/instagram-post-bot
+          cd /home/instantlymoist/node/instagram-post-bot
           ls -lsa
           pm2 deploy ecosystem.config.js production
