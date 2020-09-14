@@ -28,7 +28,6 @@ async function login() {
     const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password).then(() => {
       console.log('Logged in!');
       loggedIn = true;
-      uploadPost();
     });
   }).catch(IgCheckpointError, async () => {
     await ig.challenge.auto(true);
@@ -57,7 +56,7 @@ async function uploadPost() {
       uploadPost();
       return;
     };
-    const path = "./../memes/meme.jpg";
+    const path = "/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg";
     const publishResult = await ig.publish.photo({
       file: await readFileAsync(path),
       caption: await caption.getCaption(),
@@ -68,7 +67,7 @@ async function uploadPost() {
 
 async function downloadImageFromUrl(url, callback) {
   let extension = url.endsWith("png") ? "png" : "jpg";
-  request(url).pipe(fs.createWriteStream(`./../memes/meme.${extension}`)).on('close', () => {
+  request(url).pipe(fs.createWriteStream(`/home/instantlymoist/node/instagram-post-bot/source/memes/meme.${extension}`)).on('close', () => {
     if (extension === "png") convertMeme();
     resizeImage();
     return callback(true);
@@ -76,8 +75,8 @@ async function downloadImageFromUrl(url, callback) {
 }
 
 async function convertMeme() {
-  Jimp.read("./../memes/meme.png", function (err, image) {
-    image.scaleToFit(512, 512).write("./../memes/meme.jpg");
+  Jimp.read("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.png", function (err, image) {
+    image.scaleToFit(512, 512).write("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg");
   });
 }
 
@@ -89,11 +88,11 @@ function resizeImage() {
 
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      loadImage("memes/meme.jpg").then((image) => {
+      loadImage("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg").then((image) => {
         drawImageScaled(image, ctx);
         let jpegStream = canvas.createJPEGStream();
 
-        let fileStream = fs.createWriteStream("./../memes/meme.jpg");
+        let fileStream = fs.createWriteStream("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg");
 
         jpegStream.on('data', function (chunk) {
           fileStream.write(chunk);
