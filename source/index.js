@@ -28,6 +28,7 @@ async function login() {
     const auth = await ig.account.login(credentials.instagram.username, credentials.instagram.password).then(() => {
       console.log('Logged in!');
       loggedIn = true;
+      uploadPost();
     });
   }).catch(IgCheckpointError, async () => {
     await ig.challenge.auto(true);
@@ -88,7 +89,7 @@ function resizeImage() {
 
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      loadImage("./memes/meme.jpg").then((image) => {
+      loadImage("memes/meme.jpg").then((image) => {
         drawImageScaled(image, ctx);
         let jpegStream = canvas.createJPEGStream();
 
