@@ -57,7 +57,7 @@ async function uploadPost() {
       uploadPost();
       return;
     };
-    const path = "./memes/meme.jpg";
+    const path = "./../memes/meme.jpg";
     const publishResult = await ig.publish.photo({
       file: await readFileAsync(path),
       caption: await caption.getCaption(),
@@ -68,7 +68,7 @@ async function uploadPost() {
 
 async function downloadImageFromUrl(url, callback) {
   let extension = url.endsWith("png") ? "png" : "jpg";
-  request(url).pipe(fs.createWriteStream(`./memes/meme.${extension}`)).on('close', () => {
+  request(url).pipe(fs.createWriteStream(`./../memes/meme.${extension}`)).on('close', () => {
     if (extension === "png") convertMeme();
     resizeImage();
     return callback(true);
@@ -76,8 +76,8 @@ async function downloadImageFromUrl(url, callback) {
 }
 
 async function convertMeme() {
-  Jimp.read("./memes/meme.png", function (err, image) {
-    image.scaleToFit(512, 512).write("./memes/meme.jpg");
+  Jimp.read("./../memes/meme.png", function (err, image) {
+    image.scaleToFit(512, 512).write("./../memes/meme.jpg");
   });
 }
 
@@ -93,7 +93,7 @@ function resizeImage() {
         drawImageScaled(image, ctx);
         let jpegStream = canvas.createJPEGStream();
 
-        let fileStream = fs.createWriteStream("./memes/meme.jpg");
+        let fileStream = fs.createWriteStream("./../memes/meme.jpg");
 
         jpegStream.on('data', function (chunk) {
           fileStream.write(chunk);
