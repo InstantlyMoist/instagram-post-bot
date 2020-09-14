@@ -117,7 +117,7 @@ function drawImageScaled(img, ctx) {
     centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
 }
 
-schedule.scheduleJob('*/30 * * * * *', () => {
+schedule.scheduleJob('* */30 * * * *', () => {
   let delay = (random.int(0, 2) * 1000);
   setTimeout(uploadPost, delay);
 });
