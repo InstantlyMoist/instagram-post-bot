@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const posted = require('./../memes/posted/uploaded.json');
+const posted = require(`${appRoot}/memes/posted/uploaded.json`);
 const fs = require('fs');
 
 module.exports = {
@@ -26,7 +26,7 @@ async function savePost(postIdentifier) {
     let json = posted;
 
     json.posts.push(id);
-    fs.writeFile("/home/instantlymoist/node/instagram-post-bot/source/memes/posted/uploaded.json", JSON.stringify(json), (err) => {
+    fs.writeFile(`${appRoot}/memes/posted/uploaded.json`, JSON.stringify(json), (err) => {
         if (err) throw err;
     });
 }

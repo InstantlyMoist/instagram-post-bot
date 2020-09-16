@@ -1,7 +1,9 @@
+const path = require('path');
+global.appRoot = path.resolve(__dirname);
+
 const { IgApiClient, IgCheckpointError } = require('instagram-private-api');
 const { readFile } = require('fs');
 const { promisify } = require('util');
-const { sample } = require('lodash');
 const schedule = require('node-schedule');
 const readFileAsync = promisify(readFile);
 const random = require('random');
@@ -14,11 +16,24 @@ const Bluebird = require('bluebird');
 const inquirer = require('inquirer');
 const credentials = require('./credentials.json');
 const { createCanvas, loadImage } = require('canvas')
+const express = require('express');
+const app = express();
+
 
 const ig = new IgApiClient();
 login();
 
 let loggedIn = false;
+
+app.get('/instagram/forcepost', (req, res) => {
+  res.send(JSON.stringify({
+    status: "OK"
+  }))
+  uploadPost();
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Instagram server now running at http://localhost:${port}`));
 
 async function login() {
   console.log("Logging in...");
@@ -45,10 +60,7 @@ async function login() {
 
 
 async function uploadPost() {
-  if (!loggedIn) {
-    console.log("Not logged in, prohobitting upload");
-    return;
-  }
+  if (!loggedIn) return;
   console.log('Uploading new post...');
   let newMeme = await meme.getMemeJSON();
   downloadImageFromUrl(newMeme.url, async (success) => {
@@ -56,18 +68,17 @@ async function uploadPost() {
       uploadPost();
       return;
     };
-    const path = "/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg";
     const publishResult = await ig.publish.photo({
-      file: await readFileAsync(path),
+      file: await readFileAsync(`${appRoot}/memes/meme.jpg`),
       caption: await caption.getCaption(),
     });
-    console.log("Upload status: " + publishResult.status);
+    console.log(`Upload status: ${publishResult.status}`);
   });
 };
 
 async function downloadImageFromUrl(url, callback) {
   let extension = url.endsWith("png") ? "png" : "jpg";
-  request(url).pipe(fs.createWriteStream(`/home/instantlymoist/node/instagram-post-bot/source/memes/meme.${extension}`)).on('close', () => {
+  request(url).pipe(fs.createWriteStream(`${appRoot}/memes/meme.${extension}`)).on('close', () => {
     if (extension === "png") convertMeme();
     resizeImage();
     return callback(true);
@@ -75,8 +86,8 @@ async function downloadImageFromUrl(url, callback) {
 }
 
 async function convertMeme() {
-  Jimp.read("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.png", function (err, image) {
-    image.scaleToFit(512, 512).write("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg");
+  Jimp.read(`${appRoot}/memes/meme.png`, function (err, image) {
+    image.scaleToFit(512, 512).write(`${appRoot}/memes/meme.jpg`);
   });
 }
 
@@ -88,11 +99,11 @@ function resizeImage() {
 
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      loadImage("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg").then((image) => {
+      loadImage(`${appRoot}/memes/meme.jpg`).then((image) => {
         drawImageScaled(image, ctx);
         let jpegStream = canvas.createJPEGStream();
 
-        let fileStream = fs.createWriteStream("/home/instantlymoist/node/instagram-post-bot/source/memes/meme.jpg");
+        let fileStream = fs.createWriteStream(`${appRoot}/memes/meme.jpg`);
 
         jpegStream.on('data', function (chunk) {
           fileStream.write(chunk);
