@@ -31,7 +31,7 @@ app.get('/instagram/forcepost', (req, res) => {
   res.send(JSON.stringify({
     status: "OK"
   }))
-  //uploadPost();
+  uploadPost();
 });
 
 var options = {
@@ -39,8 +39,8 @@ var options = {
   cert: fs.readFileSync('/etc/letsencrypt/live/kyllian.nl/cert.pem')
 };
 
-http.createServer(app).listen(80);
-https.createServer(options, app).listen(443);
+http.createServer(app).listen(8080);
+https.createServer(options, app).listen(8181);
 
 async function login() {
   console.log("Logging in...");
