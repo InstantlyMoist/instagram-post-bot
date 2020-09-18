@@ -32,7 +32,7 @@ app.get('/instagram/forcepost', (req, res) => {
   uploadPost();
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 app.listen(port, () => console.log(`Instagram server now running at http://localhost:${port}`));
 
 async function login() {
