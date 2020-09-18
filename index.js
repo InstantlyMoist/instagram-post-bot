@@ -16,6 +16,8 @@ const Bluebird = require('bluebird');
 const inquirer = require('inquirer');
 const credentials = require('./credentials.json');
 const { createCanvas, loadImage } = require('canvas')
+var https = require('https');
+var http = require('http');
 const express = require('express');
 const app = express();
 
@@ -29,11 +31,16 @@ app.get('/instagram/forcepost', (req, res) => {
   res.send(JSON.stringify({
     status: "OK"
   }))
-  uploadPost();
+  //uploadPost();
 });
 
-const port = process.env.PORT || 80;
-app.listen(port, () => console.log(`Instagram server now running at http://localhost:${port}`));
+var options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/kyllian.nl/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/kyllian.nl/cert.pem')
+};
+
+http.createServer(app).listen(80);
+https.createServer(options, app).listen(443);
 
 async function login() {
   console.log("Logging in...");
