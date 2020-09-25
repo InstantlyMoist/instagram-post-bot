@@ -39,8 +39,8 @@ var options = {
   cert: fs.readFileSync('/etc/letsencrypt/live/kyllian.nl/cert.pem')
 };
 
-http.createServer(app).listen(8080);
-https.createServer(options, app).listen(8181);
+http.createServer(app).listen(10001);
+https.createServer(options, app).listen(10002);
 
 async function login() {
   console.log("Logging in...");
