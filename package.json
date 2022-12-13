@@ -20,7 +20,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "canvas": "^2.6.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "http": "0.0.0",
     "inquirer": "^7.0.4",
     "instagram-private-api": "^1.39.0",
